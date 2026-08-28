@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Process Mapping &amp; AI Enablement Tool — CFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-left">
+    <a href="https://edspace.american.edu/cfe/" target="_blank" class="logo-container" style="text-decoration:none;">
+      <img class="logo-light" src="assets/cfe-logo-color.png" alt="American University Center for Faculty Excellence">
+      <img class="logo-dark" src="assets/cfe-logo-white.png" alt="American University Center for Faculty Excellence">
+    </a>
+    <div class="header-divider"></div>
+    <div>
+      <div class="header-title">Process Mapping &amp; AI Enablement</div>
+      <div class="header-sub">Center for Faculty Excellence · American University</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">
+      <span id="themeIcon">🌙</span><span id="themeLabel">Dark Mode</span>
+    </button>
+  </div>
+</header>
+
+<!-- ══ MAIN ════════════════════════════════════════════════════ -->
+<main>
+  <div class="tool-intro">
+    <h1>Map Your Work. Find Your AI Opportunity.</h1>
+    <div class="intro-callout">
+      <span class="intro-callout-icon">→</span>
+      <p>Lay out how you actually do a piece of your work, step by step. This tool will help you notice which steps are worth exploring with AI, explain why in plain language, and generate a ready-to-use prompt you can take into Claude, ChatGPT, Copilot, Gemini, or any AI tool to start building something real.</p>
+    </div>
+  </div>
+
+  <!-- ── UTILITY BAR ── -->
+  <div class="utility-bar">
+    <span class="utility-label">Your work</span>
+    <button class="btn btn-ghost" onclick="downloadJSON()">💾 Save Progress</button>
+    <label class="file-input-label">
+      <span class="btn btn-ghost" style="pointer-events:none;">📂 Load Saved File</span>
+      <input type="file" accept="application/json" id="loadFileInput" style="display:none" onchange="loadJSON(event)">
+    </label>
+    <span style="flex:1"></span>
+    <span class="utility-label">Export</span>
+    <button class="btn btn-ghost" onclick="printBlank()">🖨️ Print Blank Worksheet</button>
+    <button class="btn btn-outline" onclick="downloadPDF()">⬇ Download My Work as PDF</button>
+  </div>
+
+  <!-- ── LENS PICKER ── -->
+  <div class="section-block">
+    <span class="section-eyebrow">Step 1</span>
+    <h2>Which part of your work are you mapping?</h2>
+    <p class="section-desc">Pick whatever applies — you can map more than one. This just helps orient the tool; you'll set the lens again for each individual step below, since a single workflow can touch more than one part of your role.</p>
+    <div class="lens-grid" id="lensGrid"></div>
+  </div>
+
+  <!-- ── PROCESS MAP BUILDER ── -->
+  <div class="section-block">
+    <span class="section-eyebrow">Step 2</span>
+    <h2>Build your process map</h2>
+    <p class="section-desc">Add one step at a time, in order, the way you'd describe it to a colleague. Don't worry about getting it perfect — a rough, honest description works better than a polished one. Answer the quick diagnostic under each step; that's what the tool uses to spot opportunities later.</p>
+    <div class="process-flow" id="stepsContainer"></div>
+    <button class="add-step-btn" onclick="addStep()">+ Add a Step</button>
+    <button class="generate-btn" onclick="analyze()">Find My Opportunities</button>
+  </div>
+
+  <!-- ══ OUTPUT: OPPORTUNITY MAP ══════════════════════════════ -->
+  <div class="output-section" id="opportunitySection">
+    <div class="output-topbar">
+      <div>
+        <div class="output-title">Your Opportunity Map</div>
+        <div class="output-context" id="opportunityContext"></div>
+      </div>
+    </div>
+    <div class="opp-list" id="oppList"></div>
+  </div>
+
+  <!-- ══ OUTPUT: PROMPT GENERATOR ══════════════════════════════ -->
+  <div class="output-section" id="promptSection">
+    <div class="output-topbar">
+      <div>
+        <div class="output-title">Take This Into Any AI Tool</div>
+        <div class="output-context">Copy and paste — no account or special access required beyond whatever AI tool you already use.</div>
+      </div>
+    </div>
+
+    <div class="prompt-section" id="toolOptionsSection">
+      <h3>Where to Take This</h3>
+      <p class="prompt-intro">Any of these can work — pick whichever you already have open.</p>
+      <div class="tool-options-grid" id="toolOptionsGrid"></div>
+    </div>
+
+    <div class="prompt-section consolidated-wrap">
+      <h3>Copy Everything at Once</h3>
+      <p class="prompt-intro">Bundles every opportunity below into a single prompt, so you can drop it all into one AI conversation and work through them together, one at a time.</p>
+      <div class="prompt-box" id="consolidatedPromptBox"></div>
+      <button class="btn btn-primary" onclick="copyText(this, consolidatedPromptText)">Copy Consolidated Prompt</button>
+    </div>
+
+    <div id="individualPrompts"></div>
+
+    <div class="prompt-section" style="background:var(--accent-subtle);">
+      <h3>Before You Go</h3>
+      <p class="prompt-intro" style="margin-bottom:0;">These prompts are a starting point, not a finished tool. Try them on a few real examples first, keep a human check on anything before it reaches students, colleagues, or your data — and come back and re-map anytime your work changes. Questions? Reach out to the Center for Faculty Excellence at <strong style="color:var(--text-primary)">cfe@american.edu</strong>.</p>
+    </div>
+
+    <div class="utility-bar" style="margin-top:1.5rem;">
+      <span class="utility-label">Export</span>
+      <button class="btn btn-outline" onclick="downloadPDF()">⬇ Download My Work as PDF</button>
+      <button class="btn btn-ghost" onclick="downloadJSON()">💾 Save Progress</button>
+    </div>
+  </div>
+</main>
+
+<!-- ══ PRINT ROOT (invisible on screen, shown only when printing) ══ -->
+<div id="printRoot">
+  <div id="printSummaryFilled"></div>
+  <div id="printBlankTemplate"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
